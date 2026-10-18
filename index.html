@@ -56,6 +56,7 @@ tr:nth-child(even) td{background:#fafbfd}
 @media print{*{-webkit-print-color-adjust:exact;print-color-adjust:exact}.dash{display:none!important}.pgb{break-before:page}.rep .card{padding:8px 10px;margin-bottom:8px}.rep th,.rep td{padding:4px 6px;font-size:12px}.rep .sc b{font-size:34px}.rep .kpi b{font-size:18px}body{font-size:12px}}
 .ft{direction:ltr;text-align:center;color:var(--mut);font-size:12px;line-height:1.5;padding:14px 12px 28px}
 @media print{@page{size:A4;margin:10mm 10mm 16mm}.ft{position:fixed;bottom:0;left:0;right:0;padding:4px 0 0;border-top:1px solid #bbb;background:#fff;font-size:10px;color:#444}}
+.rep svg text{font-family:inherit;fill:#14222f}.lg{margin:8px 0 2px;font-size:13px;color:var(--mut)}
 </style></head><body>
 <header><h1>تحليل مباراة كرة اليد</h1>
 <input id="mt" placeholder="اسم فريقك"><input id="mo" placeholder="اسم المنافس"><input id="md" type="date"></header>
@@ -67,7 +68,7 @@ tr:nth-child(even) td{background:#fafbfd}
 const RES=['هدف','صدة','خارج','عرضة','بلوك','ترن أوفر'];
 const TO=['باص خاطئ','استلام خاطئ','فاول عكسي','دبل دربل','فوتنج','4 خطوات'];
 const AL=['9م','6م','7م','هجوم خاطف','سنتر سريعة','جناح أيمن','جناح أيسر','دائرة','مرمى خالي'];
-const DE=['مقابلة مصوب','دفاع 1 على 1','متابعة الفرود','تغطية الزميل','مرمى خالي','رجوع مع الهجوم السريع','تعطيل الهجوم السريع','الضغط على الجناح'];
+const DE=['مقابلة مصوب','دفاع 1 على 1','متابعة الفرود','تغطية الزميل','مرمى خالي','رجوع مع الهجوم السريع','تعطيل الهجوم السريع','الضغط على الجناح','مراقبة مهاجم'];
 const DL=['9م','6م','جناح أيمن','جناح أيسر'];
 const MISS=['صدة','خارج','عرضة','بلوك'];
 let DB;try{DB=JSON.parse(localStorage.getItem('hb'))}catch(e){}
@@ -181,9 +182,27 @@ function report(){const A=DB.recs.filter(r=>r.t=='a'),D=DB.recs.filter(r=>r.t=='
  ${tbl(['','التصديات','الموجه','النسبة'],[['إجمالي '+esc(tn),sv.length,(sv.length+O)+' تصويبة',pc(sv.length,sv.length+O)],['حراس '+esc(on),svA,(svA+T)+' تصويبة',pc(svA,svA+T)]])}</div>
  <div class="card"><h3>نسب أخطاء الدفاع لكل لاعب (إجمالي ${O})</h3>${tbl(['اللاعب','الأخطاء','النسبة'],de)}</div>
  <div class="card"><h3>ثالثاً: تحليل أهداف وهجمات ${esc(on)} (${O} هدف)</h3>${tbl(['منطقة الأهداف','الأهداف','النسبة'],oz.map(([x,n])=>[x,n,pc(n,O)]))}${tbl(['سبب ضياع هجمات '+esc(on),'العدد','النسبة'],[...lr.map(([x,n])=>[x,n,pc(n,NO.length)]),['إجمالي الهجمات الضائعة',NO.length,NO.length?'100%':'-']])}</div>
- <div class="card"><h3>رابعاً: زمن العقم التهديفي المجمع (${tot} دقيقة بدون أهداف)</h3>${dr.map(d=>`<h4>الشوط ${d.h==1?'الأول':'الثاني'}: ${d.s} دقيقة عقم تهديفي</h4><p>سجل التهديف: ${d.bk.map(b=>`د ${b[0]} إلى د ${b[1]}: <b>${b[2]}</b> أهداف`).join(' | ')}</p><p>أوقات بلا أهداف (${d.lost} هجمة ضائعة):</p><ul>${d.gp.map(g=>`<li>د${g.a} إلى د${g.b} (${g.b-g.a} دقائق) - ضاع ${g.n} هجمات</li>`).join('')||'<li>لا يوجد</li>'}</ul>`).join('')}</div></section>`;
+ ${droughtHTML(dr,A,D,tot,tn,on)}</section>`;
  return h}
 function pr(){tab="st";render();scrollTo(0,0);setTimeout(()=>window.print(),300)}
+function droughtHTML(dr,A,D,tot,tn,on){
+ const G=L=>L.filter(r=>r.res=='هدف'),BK=[[1,10],[11,20],[21,30]],HN=h=>h==1?'الأول':'الثاني';
+ const cb=(L,h,x,y)=>G(L.filter(r=>r.half==h)).filter(r=>+r.min>=x&&+r.min<=y).length;
+ const rows=[],vals=[];
+ [1,2].forEach(h=>BK.forEach(([x,y])=>{const a=cb(A,h,x,y),o=cb(D,h,x,y);rows.push(['الشوط '+HN(h)+' (د '+x+' - '+y+')',a,o,a-o>0?'+'+(a-o):a-o]);vals.push([a,o,'ش'+h+' د'+x+'-'+y])}));
+ const mx=Math.max(1,...vals.map(v=>Math.max(v[0],v[1]))),W=640,H=210,bt=22,bb=34,ch=H-bt-bb,gw=(W-20)/6;
+ const bars=vals.map(([a,o,l],i)=>{const x=10+i*gw+gw/2-27,ha=a/mx*ch,ho=o/mx*ch;return `<rect x="${x}" y="${bt+ch-ha}" width="25" height="${ha}" rx="3" fill="#1b6ca8"/><rect x="${x+29}" y="${bt+ch-ho}" width="25" height="${ho}" rx="3" fill="#ff6a1f"/><text x="${x+12}" y="${bt+ch-ha-5}" font-size="13" font-weight="700" text-anchor="middle">${a}</text><text x="${x+41}" y="${bt+ch-ho-5}" font-size="13" font-weight="700" text-anchor="middle">${o}</text><text x="${x+27}" y="${H-12}" font-size="11" text-anchor="middle">${l}</text>`}).join('');
+ const chart=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;direction:ltr"><line x1="10" x2="${W-10}" y1="${bt+ch}" y2="${bt+ch}" stroke="#b9c6d4"/>${bars}</svg>`;
+ const TW=600,tl=[1,2].map((h,k)=>{const d=dr[k],y=k*38,mins=G(A.filter(r=>r.half==h)).map(r=>+r.min||0);
+  return `<text x="0" y="${y+17}" font-size="12">ش${h}</text><rect x="40" y="${y+4}" width="${TW}" height="18" rx="4" fill="#e7f3ec"/>${d.gp.map(g=>`<rect x="${40+g.a/30*TW}" y="${y+4}" width="${(g.b-g.a)/30*TW}" height="18" fill="#f4b6bd"/>`).join('')}${mins.map(m=>`<rect x="${40+m/30*TW-2}" y="${y+1}" width="4" height="24" rx="2" fill="#12905a"/>`).join('')}`}).join('');
+ const strip=`<svg viewBox="0 0 650 80" style="width:100%;height:auto;direction:ltr">${tl}<text x="40" y="76" font-size="11">0</text><text x="335" y="76" font-size="11">15</text><text x="628" y="76" font-size="11">30 د</text></svg>`;
+ const per=[];dr.forEach(d=>d.gp.forEach(g=>per.push(['الشوط '+HN(d.h),'د '+(g.a||1)+' إلى د '+g.b,(g.b-g.a)+' دقيقة',g.n])));
+ return `<div class="card"><h3>رابعاً: زمن العقم التهديفي المجمع (${tot} دقيقة بدون أهداف)</h3>
+ <h4>ملخص العقم التهديفي</h4>${tbl(['الشوط','دقائق العقم','عدد الفترات','هجمات ضائعة'],[...dr.map(d=>['الشوط '+HN(d.h),d.s,d.gp.length,d.lost]),['الإجمالي',tot,dr.reduce((x,d)=>x+d.gp.length,0),dr.reduce((x,d)=>x+d.lost,0)]])}
+ <h4>سجل التهديف كل 10 دقائق</h4>${tbl(['الفترة','أهداف '+esc(tn),'أهداف '+esc(on),'الفارق'],rows)}
+ <p class="lg"><span style="color:#1b6ca8">■</span> ${esc(tn)} &nbsp; <span style="color:#ff6a1f">■</span> ${esc(on)}</p>${chart}
+ <h4>الفترات بدون أهداف</h4>${tbl(['الشوط','الفترة','المدة','هجمات ضائعة'],per)}
+ <p class="lg"><span style="color:#12905a">▍</span> هدف &nbsp; <span style="color:#e58a96">■</span> فترة عقم</p>${strip}</div>`}
 function tools(){return`<div class="tools card"><button onclick="exp()">حفظ ملف المباراة</button><button onclick="document.getElementById('f').click()">فتح ملف مباراة</button><button onclick="pr()">تصدير PDF / طباعة</button><button style="background:#c62f2f" onclick="reset()">مباراة جديدة</button><input id="f" type="file" accept=".json" class="hide" onchange="imp(this)"></div>`}
 function exp(){const b=new Blob([JSON.stringify(DB)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=(DB.m.team||'match')+'-vs-'+(DB.m.opp||'opp')+'.json';a.click()}
 function imp(el){const r=new FileReader();r.onload=()=>{try{DB=JSON.parse(r.result);save();init();fill();render()}catch(e){alert('ملف غير صالح')}};r.readAsText(el.files[0])}
