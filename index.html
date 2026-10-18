@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0d1b2a">
+<title>تحليل مباراة كرة اليد</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+<style>
+:root{--ink:#0d1b2a;--floor:#1b6ca8;--ball:#ff6a1f;--bg:#eef1f5;--w:#fff;--line:#e2e8ef;--mut:#5d6b7a;--g:#12905a;--r:#d6384a}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 "IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif}
+header{position:relative;overflow:hidden;background:var(--ink);color:#fff;padding:18px 16px 20px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+header::before{content:"";position:absolute;inset-inline-end:-60px;top:-70px;width:220px;height:220px;border-radius:50%;border:2px solid rgba(255,255,255,.12);box-shadow:0 0 0 26px rgba(255,255,255,.04)}
+header::after{content:"";position:absolute;inset-inline-start:0;bottom:0;width:100%;height:3px;background:linear-gradient(90deg,var(--ball),var(--floor))}
+header h1{margin:0;font-size:20px;font-weight:700;flex:1 1 220px;display:flex;align-items:center;gap:10px;position:relative}
+header h1::before{content:"";width:22px;height:22px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffa56b,var(--ball) 60%);flex:none}
+header input{position:relative;padding:9px 12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;border-radius:10px;width:140px;font:inherit}
+header input::placeholder{color:rgba(255,255,255,.55)}
+header input:focus{outline:2px solid var(--ball);border-color:transparent}
+nav{display:flex;gap:6px;padding:10px 12px;background:rgba(238,241,245,.92);backdrop-filter:blur(8px);position:sticky;top:0;z-index:5;max-width:1000px;margin:auto}
+nav button{flex:1;padding:11px 6px;border:1px solid var(--line);border-radius:12px;background:var(--w);color:var(--mut);font:inherit;font-weight:600;cursor:pointer;transition:.15s}
+nav button.on{background:var(--ink);color:#fff;border-color:var(--ink);box-shadow:0 4px 12px rgba(13,27,42,.25)}
+main{padding:4px 12px 90px;max-width:1000px;margin:auto}
+.card{background:var(--w);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:12px;box-shadow:0 1px 2px rgba(13,27,42,.04)}
+.card h3{margin:0 0 10px;font-size:15px;font-weight:700;color:var(--ink)}
+.c{margin:3px;padding:9px 15px;border:1px solid var(--line);background:#f7f9fb;color:var(--ink);border-radius:12px;font:inherit;font-weight:500;cursor:pointer;transition:.12s}
+.c:hover{border-color:var(--floor)}
+.c.on{background:var(--floor);color:#fff;border-color:var(--floor);box-shadow:0 3px 10px rgba(27,108,168,.35)}
+.c.ok.on{background:var(--g);border-color:var(--g)}.c.no.on{background:var(--r);border-color:var(--r)}
+.c.ok,.c.no{font-size:20px;padding:8px 30px}
+input,select{padding:10px 12px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#f7f9fb;color:var(--ink)}
+input:focus,select:focus{outline:2px solid var(--floor);background:#fff}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.save{position:sticky;bottom:12px;width:100%;padding:15px;border:0;border-radius:14px;background:var(--ball);color:#fff;font:700 17px inherit;font-family:inherit;cursor:pointer;box-shadow:0 8px 22px rgba(255,106,31,.45)}
+.save:active{transform:scale(.99)}
+.tools{display:flex;flex-wrap:wrap}.tools button,.sm{padding:9px 14px;border:0;border-radius:10px;background:var(--ink);color:#fff;font:inherit;font-weight:500;cursor:pointer;margin:3px}
+.sm{padding:5px 11px;font-size:13px}.sm.x{background:var(--r)}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:14px}
+th,td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:center}
+th{background:#f3f6f9;color:var(--mut);font-weight:600;font-size:13px}
+th:first-child{border-radius:0 10px 0 0}th:last-child{border-radius:10px 0 0 0}
+td:first-child{font-weight:600;text-align:start}
+tr:nth-child(even) td{background:#fafbfd}
+.bar{display:inline-block;height:8px;background:linear-gradient(90deg,var(--floor),var(--ball));border-radius:4px;vertical-align:middle;margin-inline-start:8px}
+.kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.kpi div{background:#f3f6f9;border-radius:14px;padding:12px;text-align:center;color:var(--mut);font-size:13px}
+.kpi b{display:block;font-size:28px;font-weight:700;color:var(--ink);line-height:1.2}
+.kpi div:nth-child(2) b{color:var(--g)}.kpi div:nth-child(5) b{color:var(--r)}
+.hide{display:none}.ph{display:none}
+@media(max-width:560px){header input{flex:1 1 40%;width:auto}.c{padding:10px 13px}}
+@media print{header,nav,.tools,.sm{display:none!important}.ph{display:block;margin-bottom:10px}body{background:#fff}.card{break-inside:avoid;box-shadow:none}main{padding:0}}
+.rep .hd{text-align:center;margin:6px 0 12px}.rep .hd h2{margin:0;font-size:22px}.rep .hd p{margin:2px 0;color:var(--mut)}
+.sc{display:flex;justify-content:center;align-items:center;gap:26px;text-align:center}.sc b{display:block;font-size:46px;line-height:1.1}.sc i{font-size:36px;font-style:normal;color:var(--mut)}.sc small{font-size:15px;font-weight:600}
+.rep .kpi{margin-bottom:12px}.rep .kpi b{font-size:22px}.tl{font-weight:700;margin:8px 2px}
+.rep h4{margin:10px 0 6px;color:var(--floor)}.rep table+table{margin-top:10px}.rep ul{margin:4px 0;padding-inline-start:20px}.rep p{margin:4px 0}
+.zs{display:flex;flex-wrap:wrap;gap:8px}.zs span{background:#f3f6f9;border-radius:10px;padding:6px 12px}.zs b{margin-inline-end:6px;color:var(--ball);font-size:18px}
+.dash>h3{margin:18px 4px 8px}
+@page{size:A4;margin:10mm}
+@media print{*{-webkit-print-color-adjust:exact;print-color-adjust:exact}.dash{display:none!important}.pgb{break-before:page}.rep .card{padding:8px 10px;margin-bottom:8px}.rep th,.rep td{padding:4px 6px;font-size:12px}.rep .sc b{font-size:34px}.rep .kpi b{font-size:18px}body{font-size:12px}}
+</style></head><body>
+<header><h1>تحليل مباراة كرة اليد</h1>
+<input id="mt" placeholder="اسم فريقك"><input id="mo" placeholder="اسم المنافس"><input id="md" type="date"></header>
+<nav><button data-t="a">⚔ هجوم</button><button data-t="d">🛡 دفاع</button><button data-t="log">السجل</button><button data-t="st">الإحصائيات</button></nav>
+<main><div id="app"></div></main>
+<datalist id="pn"></datalist><datalist id="pu"></datalist>
+<script>
+const RES=['هدف','صدة','خارج','عرضة','بلوك','ترن أوفر'];
+const TO=['باص خاطئ','استلام خاطئ','فاول عكسي','دبل دربل','فوتنج','4 خطوات'];
+const AL=['9م','6م','7م','هجوم خاطف','سنتر سريعة','جناح أيمن','جناح أيسر','دائرة','مرمى خالي'];
+const DE=['مقابلة مصوب','دفاع 1 على 1','متابعة الفرود','تغطية الزميل','مرمى خالي','رجوع مع الهجوم السريع','تعطيل الهجوم السريع','الضغط على الجناح'];
+const DL=['9م','6م','جناح أيمن','جناح أيسر'];
+const MISS=['صدة','خارج','عرضة','بلوك'];
+let DB;try{DB=JSON.parse(localStorage.getItem('hb'))}catch(e){}
+DB=DB||{m:{team:'',opp:'',date:''},recs:[]};
+const save=()=>{try{localStorage.setItem('hb',JSON.stringify(DB))}catch(e){}};
+let tab='a',F={a:{half:1,min:1},d:{half:1,min:1}};
+const cnt=t=>DB.recs.filter(r=>r.t==t).length;
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pct=(a,b)=>b?Math.round(a/b*100):0;
+const pc=(a,b)=>b?pct(a,b)+'%':'-';
+function init(){F.a.n=Math.min(cnt('a')+1,60);F.d.n=Math.min(cnt('d')+1,60)}
+function chips(t,k,arr){return arr.map(v=>`<button class="c ${F[t][k]===v?'on':''}" onclick="S('${t}','${k}','${v}')">${v}</button>`).join('')}
+function S(t,k,v){const f=F[t];f[k]=v;
+ if(k=='res'){if(v!='ترن أوفر')f.sub='';if(!f.ds)f.dec=t=='a'?(v=='هدف'?'✔':'❌'):(v=='هدف'?'❌':'✔');
+  if(t=='d'&&v=='هدف'&&!f.gn)f.gn=Math.min(DB.recs.filter(r=>r.t=='d'&&r.res=='هدف').length+1,60)}
+ if(k=='dec')f.ds=1;render()}
+function I(t,k,v){F[t][k]=v}
+function num(t,k,max,from){let o='<option value="">-</option>';for(let i=from;i<=max;i++)o+=`<option ${F[t][k]==i?'selected':''}>${i}</option>`;return`<select onchange="I('${t}','${k}',this.value)">${o}</select>`}
+function half(t){return[1,2].map(h=>`<button class="c ${F[t].half==h?'on':''}" onclick="F.${t}.half=${h};render()">الشوط ${h==1?'الأول':'الثاني'}</button>`).join('')}
+function form(t){const f=F[t],A=t=='a';
+ return`<div class="card"><h3>رقم ${A?'الهجمة':'الهجمة (للمنافس)'}</h3>${num(t,'n',60,1)}</div>
+<div class="card"><h3>النتيجة</h3>${chips(t,'res',RES)}${f.res=='ترن أوفر'?`<div><b>نوع الترن أوفر:</b> ${chips(t,'sub',TO)}</div>`:''}</div>
+<div class="card"><h3>${A?'اللاعب منهي الهجمة':'المدافع (أو الحارس عند تسجيل صدة)'}</h3><div class="row"><input list="pn" placeholder="الاسم" value="${esc(f.pname)}" oninput="I('${t}','pname',this.value)"><input list="pu" type="number" style="width:90px" placeholder="الرقم" value="${esc(f.pnum)}" oninput="I('${t}','pnum',this.value)"></div></div>
+<div class="card"><h3>${A?'مكان إنهاء الهجمة':'نوع الخطأ الدفاعي'}</h3>${chips(t,A?'loc':'err',A?AL:DE)}</div>
+${A?'':`<div class="card"><h3>مكان الخطأ الدفاعي</h3>${chips(t,'loc',DL)}</div><div class="card"><h3>رقم الهدف</h3>${num(t,'gn',60,1)}</div>`}
+<div class="card"><h3>التوقيت</h3>${half(t)} ${num(t,'min',30,1)} دقيقة</div>
+<div class="card"><h3>القرار النهائي</h3><button class="c ok ${f.dec=='✔'?'on':''}" onclick="S('${t}','dec','✔')">✔</button><button class="c no ${f.dec=='❌'?'on':''}" onclick="S('${t}','dec','❌')">❌</button></div>
+<button class="save" onclick="add('${t}')">حفظ ${A?'الهجمة':'الدفاع'}</button>`}
+function add(t){const f=F[t];if(!f.res)return alert('اختر نتيجة الهجمة');if(!f.dec)return alert('اختر القرار ✔ أو ❌');
+ DB.recs.push({...f,t,id:Date.now()});save();F[t]={half:f.half,min:f.min};init();render()}
+function del(id){if(confirm('حذف التسجيل؟')){DB.recs=DB.recs.filter(r=>r.id!=id);save();init();render()}}
+function edit(id){const r=DB.recs.find(x=>x.id==id);DB.recs=DB.recs.filter(x=>x.id!=id);F[r.t]={...r,ds:1};save();tab=r.t;render()}
+function log(){const rows=DB.recs.slice().sort((a,b)=>a.t==b.t?a.n-b.n:a.t<b.t?-1:1).map(r=>`<tr><td>${r.t=='a'?'هجوم':'دفاع'}</td><td>${r.n||''}</td><td>${r.res}${r.sub?' ('+r.sub+')':''}</td><td>${esc(r.pnum)} ${esc(r.pname)}</td><td>${r.t=='a'?r.loc||'':(r.err||'')+' / '+(r.loc||'')}</td><td>${r.gn||''}</td><td>ش${r.half} د${r.min||''}</td><td>${r.dec}</td><td><button class="sm" onclick="edit(${r.id})">تعديل</button><button class="sm x" onclick="del(${r.id})">حذف</button></td></tr>`).join('');
+ return`<div class="card" style="overflow:auto"><table><tr><th>النوع</th><th>رقم</th><th>النتيجة</th><th>اللاعب</th><th>المكان/الخطأ</th><th>هدف</th><th>التوقيت</th><th>قرار</th><th></th></tr>${rows||'<tr><td colspan=9>لا توجد تسجيلات</td></tr>'}</table></div>`}
+function tbl(h,rows){return`<table><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr>${rows.map(r=>`<tr>${r.map(x=>`<td>${x}</td>`).join('')}</tr>`).join('')||`<tr><td colspan=${h.length}>-</td></tr>`}</table>`}
+function bar(a,b){return pc(a,b)+`<span class="bar" style="width:${pct(a,b)*0.6}px"></span>`}
+function grp(arr,fn){const m={};arr.forEach(r=>{const k=fn(r);if(k)(m[k]=m[k]||[]).push(r)});return m}
+function stats(){const A=DB.recs.filter(r=>r.t=='a'),D=DB.recs.filter(r=>r.t=='d');
+ const ag=A.filter(r=>r.res=='هدف').length,am=A.filter(r=>MISS.includes(r.res)).length,at=A.filter(r=>r.res=='ترن أوفر').length;
+ const dg=D.filter(r=>r.res=='هدف').length,ds=D.filter(r=>r.res=='صدة').length,dt=D.filter(r=>r.res=='ترن أوفر').length;
+ const ash=ag+am,dsh=dg+ds,ok=(L)=>L.filter(r=>r.dec=='✔').length;
+ const pk=r=>((r.pnum||'')+' '+(r.pname||'')).trim();
+ let h=`<div class="ph"><h2>${esc(DB.m.team)} × ${esc(DB.m.opp)} — ${esc(DB.m.date)}</h2></div>`;
+ h+=`<div class="card"><h3>ملخص الهجوم</h3><div class="kpi"><div><b>${A.length}</b>هجمات</div><div><b>${ag}</b>أهداف</div><div><b>${pc(ag,A.length)}</b>فعالية الهجمة</div><div><b>${pc(ag,ash)}</b>فعالية التصويب</div><div><b>${at}</b>ترن أوفر</div><div><b>${pc(ok(A),A.length)}</b>قرارات ✔</div></div></div>`;
+ h+=`<div class="card"><h3>ملخص الدفاع</h3><div class="kpi"><div><b>${D.length}</b>هجمات المنافس</div><div><b>${dg}</b>أهداف مستقبلة</div><div><b>${pc(dg,D.length)}</b>نجاح المنافس</div><div><b>${ds}</b>صدات الحارس</div><div><b>${pc(ds,dsh)}</b>نسبة الحراس</div><div><b>${pc(ok(D),D.length)}</b>قرارات ✔</div></div></div>`;
+ h+=`<div class="card"><h3>نتائج الهجوم</h3>${tbl(['النتيجة','العدد','النسبة'],RES.map(x=>{const n=A.filter(r=>r.res==x).length;return[x,n,bar(n,A.length)]}))}</div>`;
+ h+=`<div class="card"><h3>أنواع الترن أوفر (هجوم / دفاع)</h3>${tbl(['النوع','هجوم','دفاع'],TO.map(x=>[x,A.filter(r=>r.sub==x).length,D.filter(r=>r.sub==x).length]))}</div>`;
+ h+=`<div class="card"><h3>الهجوم حسب مكان الإنهاء</h3>${tbl(['المكان','محاولات','أهداف','فعالية'],AL.map(x=>{const L=A.filter(r=>r.loc==x),g=L.filter(r=>r.res=='هدف').length;return[x,L.length,g,bar(g,L.length)]}))}</div>`;
+ const pa=Object.entries(grp(A,pk)).map(([k,L])=>{const g=L.filter(r=>r.res=='هدف').length,m=L.filter(r=>MISS.includes(r.res)).length;return[k,L.length,g,m,L.filter(r=>r.res=='ترن أوفر').length,pc(g,g+m)]}).sort((a,b)=>b[2]-a[2]);
+ h+=`<div class="card"><h3>ترتيب اللاعبين — الهجوم (حسب التهديف)</h3>${tbl(['اللاعب','هجمات','أهداف','إضاعة','ترن أوفر','تصويب'],pa)}</div>`;
+ h+=`<div class="card"><h3>أكثر اللاعبين إضاعة وأخطاء هجومية</h3>${tbl(['اللاعب','إضاعة','ترن أوفر','المجموع'],pa.map(r=>[r[0],r[3],r[4],r[3]+r[4]]).sort((a,b)=>b[3]-a[3]))}</div>`;
+ h+=`<div class="card"><h3>نتائج الدفاع</h3>${tbl(['النتيجة','العدد','النسبة'],RES.map(x=>{const n=D.filter(r=>r.res==x).length;return[x,n,bar(n,D.length)]}))}</div>`;
+ h+=`<div class="card"><h3>الأخطاء الدفاعية حسب النوع</h3>${tbl(['نوع الخطأ','العدد','أهداف','نسبة الأهداف'],DE.map(x=>{const L=D.filter(r=>r.err==x),g=L.filter(r=>r.res=='هدف').length;return[x,L.length,g,bar(g,L.length)]}).sort((a,b)=>b[1]-a[1]))}</div>`;
+ h+=`<div class="card"><h3>الأخطاء الدفاعية حسب المكان</h3>${tbl(['المكان','العدد','أهداف'],DL.map(x=>{const L=D.filter(r=>r.loc==x);return[x,L.length,L.filter(r=>r.res=='هدف').length]}))}</div>`;
+ const pd=Object.entries(grp(D,pk)).map(([k,L])=>[k,L.length,L.filter(r=>r.res=='هدف').length,L.filter(r=>r.dec=='❌').length]).sort((a,b)=>b[1]-a[1]);
+ h+=`<div class="card"><h3>ترتيب المدافعين (حسب الأخطاء المسجلة)</h3>${tbl(['المدافع','أخطاء','أهداف مستقبلة','قرار ❌'],pd)}</div>`;
+ h+=`<div class="card"><h3>ترتيب الأهداف (توقيت)</h3>${tbl(['الهدف','النوع','اللاعب','التوقيت'],[...A.filter(r=>r.res=='هدف').map(r=>['#'+r.n,'سجلنا',pk(r),'ش'+r.half+' د'+r.min]),...D.filter(r=>r.res=='هدف').map(r=>['#'+(r.gn||r.n),'استقبلنا',pk(r),'ش'+r.half+' د'+r.min])].sort((a,b)=>(a[3]>b[3])-(a[3]<b[3])))}</div>`;
+ h+=`<div class="card"><h3>مقارنة الشوطين</h3>${tbl(['','هجمات','أهداف','فعالية','هجمات المنافس','أهداف مستقبلة','نسبة الحراس'],[1,2].map(s=>{const a=A.filter(r=>r.half==s),d=D.filter(r=>r.half==s),g=a.filter(r=>r.res=='هدف').length,c=d.filter(r=>r.res=='هدف').length,v=d.filter(r=>r.res=='صدة').length;return['الشوط '+s,a.length,g,pc(g,a.length),d.length,c,pc(v,c+v)]}))}</div>`;
+ return h+`<div class="card"><h3>تسجيل الحارس (صدات فريقك / صدات حارس المنافس)</h3>${tbl(['','صدات','أهداف','النسبة'],[['حارسنا',ds,dg,pc(ds,dsh)],['حارس المنافس',A.filter(r=>r.res=='صدة').length,ag,pc(A.filter(r=>r.res=='صدة').length,A.filter(r=>r.res=='صدة').length+ag)]])}</div>`}
+function report(){const A=DB.recs.filter(r=>r.t=='a'),D=DB.recs.filter(r=>r.t=='d'),G=L=>L.filter(r=>r.res=='هدف'),NG=L=>L.filter(r=>r.res!='هدف'),M=DB.m,tn=M.team||'فريقنا',on=M.opp||'المنافس';
+ const k2=r=>(r.pname||r.pnum||'').trim(),ag=G(A),dg=G(D),T=ag.length,O=dg.length;
+ const hs=[1,2].map(h=>[G(A.filter(r=>r.half==h)).length,G(D.filter(r=>r.half==h)).length]);
+ const df=(a,b)=>a==b?'تعادل':'لصالح '+(a>b?tn:on)+' (+'+Math.abs(a-b)+')';
+ let dr=[],tot=0;
+ [1,2].forEach(h=>{const mins=G(A.filter(r=>r.half==h)).map(r=>+r.min||0).sort((a,b)=>a-b),p=[0,...mins,30],gp=[];
+  for(let i=0;i<p.length-1;i++){const a=p[i],b=p[i+1];if(b-a>=5)gp.push({a,b,n:NG(A.filter(r=>r.half==h)).filter(r=>+r.min>a&&+r.min<b).length})}
+  const s=gp.reduce((x,y)=>x+y.b-y.a,0);tot+=s;
+  const bk=[[1,10],[11,20],[21,30]].map(([x,y])=>[x,y,mins.filter(m=>m>=x&&m<=y).length]);
+  dr.push({h,gp,s,bk,lost:gp.reduce((x,y)=>x+y.n,0)})});
+ const cp=(L,key,arr)=>arr.map(x=>[x,L.filter(r=>r[key]==x).length]).filter(x=>x[1]).sort((a,b)=>b[1]-a[1]);
+ const chipz=L=>`<div class="zs">${L.map(([x,n])=>`<span><b>${n}</b>${x}</span>`).join('')||'-'}</div>`;
+ const pl=Object.entries(grp(A,k2)).map(([k,L])=>{const g=G(L).length;return[k,g,L.length-g,L.length,pct(g,L.length)]}).sort((a,b)=>b[4]-a[4]||b[3]-a[3]);
+ const sh=NG(A).filter(r=>r.res!='ترن أوفر'),to=A.filter(r=>r.res=='ترن أوفر').length,MS=NG(A).length;
+ const zr=cp(sh,'loc',AL).map(([x,n])=>['تصويب ضائع من '+x,n,pc(n,MS)]);if(to)zr.push(['أخطاء / ترن أوفر هجومية',to,pc(to,MS)]);
+ const LB={'صدة':'صدة حارس '+on,'ترن أوفر':'ترن أوفر (Turnover)','خارج':'تصويب خارج المرمى','عرضة':'كرة في العارضة','بلوك':'بلوك الدفاع'};
+ const er=['صدة','ترن أوفر','خارج','عرضة','بلوك'].map(x=>[LB[x],A.filter(r=>r.res==x).length]).filter(x=>x[1]);
+ const sv=D.filter(r=>r.res=='صدة'),svA=A.filter(r=>r.res=='صدة').length;
+ const kp=Object.entries(grp(sv,k2)).map(([k,L])=>[k,L.length]).sort((a,b)=>b[1]-a[1]);
+ const de=Object.entries(grp(dg,r=>k2(r)||'الجميع (أخطاء جماعية)')).map(([k,L])=>[k,L.length,pc(L.length,O)]).sort((a,b)=>b[1]-a[1]);
+ const zn=r=>r.err=='مرمى خالي'?'مرمى خالي':/الهجوم السريع/.test(r.err||'')?'فاست بريك':r.loc||'غير محدد';
+ const oz=Object.entries(grp(dg,zn)).map(([k,L])=>[k,L.length]).sort((a,b)=>b[1]-a[1]);
+ const NO=NG(D),LD={'صدة':'تصدي حراس '+tn,'ترن أوفر':'ترن أوفر','خارج':'تصويب خارج المرمى','عرضة':'كرة في العارضة','بلوك':'بلوك'};
+ const lr=['صدة','ترن أوفر','خارج','عرضة','بلوك'].map(x=>[LD[x],NO.filter(r=>r.res==x).length]).filter(x=>x[1]);
+ let h=`<section class="rep"><div class="hd"><h2>تقرير إحصائيات مباراة كرة اليد</h2><p>${esc(tn)} × ${esc(on)}${M.date?' | '+esc(M.date):''}</p></div>
+ <div class="card sc"><div><small>${esc(tn)}</small><b>${T}</b></div><i>:</i><div><small>${esc(on)}</small><b>${O}</b></div></div>
+ <div class="kpi"><div><small>نتيجة الشوط الأول</small><b>${hs[0][0]} - ${hs[0][1]}</b>${df(...hs[0])}</div><div><small>نتيجة الشوط الثاني</small><b>${hs[1][0]} - ${hs[1][1]}</b>${df(...hs[1])}</div><div><small>زمن العقم التهديفي</small><b>${tot} دقيقة</b>${pc(tot,60)} من زمن المباراة</div></div>
+ <p class="tl">إجمالي الهجمات: ${A.length} | الأهداف: ${T} (${pc(T,A.length)})</p>
+ <div class="card"><h3>أولاً: إحصائيات الهجوم ونسب فاعلية لاعبي ${esc(tn)}</h3>${tbl(['اللاعب','الأهداف','الضائع','الإجمالي','نسبة النجاح'],pl.map(r=>[r[0],r[1],r[2],r[3],bar(r[1],r[3])]))}</div>
+ <div class="card"><h3>توزيع أهداف ${esc(tn)} حسب منطقة التهديف (${T} هدف)</h3>${chipz(cp(ag,'loc',AL))}</div>
+ <div class="card"><h3>تصويبات ${esc(tn)} الضائعة حسب المنطقة (${MS})</h3>${tbl(['منطقة التصويب','العدد','من الضائع'],zr)}</div>
+ <div class="card"><h3>نسب أخطاء الهجوم من إجمالي الهجمات (${A.length})</h3>${tbl(['نوع الخطأ الهجومي','العدد','من الهجمات'],[...er.map(([x,n])=>[x,n,pc(n,A.length)]),['إجمالي الأخطاء والهجمات الضائعة',MS,pc(MS,A.length)]])}</div>
+ <div class="card pgb"><h3>ثانياً: إحصائيات الدفاع ونسب أخطاء اللاعبين</h3><h4>تصديات حراس مرمى ${esc(tn)}</h4>${tbl(['الحارس','التصديات'],kp)}
+ ${tbl(['','التصديات','الموجه','النسبة'],[['إجمالي '+esc(tn),sv.length,(sv.length+O)+' تصويبة',pc(sv.length,sv.length+O)],['حراس '+esc(on),svA,(svA+T)+' تصويبة',pc(svA,svA+T)]])}</div>
+ <div class="card"><h3>نسب أخطاء الدفاع لكل لاعب (إجمالي ${O})</h3>${tbl(['اللاعب','الأخطاء','النسبة'],de)}</div>
+ <div class="card"><h3>ثالثاً: تحليل أهداف وهجمات ${esc(on)} (${O} هدف)</h3>${tbl(['منطقة الأهداف','الأهداف','النسبة'],oz.map(([x,n])=>[x,n,pc(n,O)]))}${tbl(['سبب ضياع هجمات '+esc(on),'العدد','النسبة'],[...lr.map(([x,n])=>[x,n,pc(n,NO.length)]),['إجمالي الهجمات الضائعة',NO.length,NO.length?'100%':'-']])}</div>
+ <div class="card"><h3>رابعاً: زمن العقم التهديفي المجمع (${tot} دقيقة بدون أهداف)</h3>${dr.map(d=>`<h4>الشوط ${d.h==1?'الأول':'الثاني'}: ${d.s} دقيقة عقم تهديفي</h4><p>سجل التهديف: ${d.bk.map(b=>`د ${b[0]} إلى د ${b[1]}: <b>${b[2]}</b> أهداف`).join(' | ')}</p><p>أوقات بلا أهداف (${d.lost} هجمة ضائعة):</p><ul>${d.gp.map(g=>`<li>د${g.a} إلى د${g.b} (${g.b-g.a} دقائق) - ضاع ${g.n} هجمات</li>`).join('')||'<li>لا يوجد</li>'}</ul>`).join('')}</div></section>`;
+ return h}
+function tools(){return`<div class="tools card"><button onclick="exp()">حفظ ملف المباراة</button><button onclick="document.getElementById('f').click()">فتح ملف مباراة</button><button onclick="window.print()">تصدير PDF / طباعة</button><button style="background:#c62f2f" onclick="reset()">مباراة جديدة</button><input id="f" type="file" accept=".json" class="hide" onchange="imp(this)"></div>`}
+function exp(){const b=new Blob([JSON.stringify(DB)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=(DB.m.team||'match')+'-vs-'+(DB.m.opp||'opp')+'.json';a.click()}
+function imp(el){const r=new FileReader();r.onload=()=>{try{DB=JSON.parse(r.result);save();init();fill();render()}catch(e){alert('ملف غير صالح')}};r.readAsText(el.files[0])}
+function reset(){if(confirm('هتمسح كل بيانات المباراة الحالية. متأكد؟ (احفظ الملف الأول)')){DB={m:{team:'',opp:'',date:''},recs:[]};save();F={a:{half:1,min:1},d:{half:1,min:1}};init();fill();render()}}
+function fill(){mt.value=DB.m.team;mo.value=DB.m.opp;md.value=DB.m.date}
+['mt','mo','md'].forEach(i=>document.getElementById(i).oninput=function(){DB.m[{mt:'team',mo:'opp',md:'date'}[i]]=this.value;save()});
+function render(){document.getElementById('pn').innerHTML=[...new Set(DB.recs.map(r=>r.pname).filter(Boolean))].map(v=>`<option value="${esc(v)}">`).join('');
+ document.getElementById('pu').innerHTML=[...new Set(DB.recs.map(r=>r.pnum).filter(Boolean))].map(v=>`<option value="${esc(v)}">`).join('');
+ document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t==tab));
+ document.getElementById('app').innerHTML=tab=='a'||tab=='d'?form(tab):tab=='log'?log()+tools():tools()+report()+'<h3 class="dash">إحصائيات تفصيلية إضافية (للعرض فقط، لا تُطبع)</h3><div class="dash">'+stats()+'</div>'}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render();scrollTo(0,0)});
+init();fill();render();
+</script></body></html>
