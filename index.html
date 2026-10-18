@@ -87,25 +87,35 @@ function S(t,k,v){const f=F[t];f[k]=v;
 function I(t,k,v){F[t][k]=v}
 function num(t,k,max,from){let o='<option value="">-</option>';for(let i=from;i<=max;i++)o+=`<option ${F[t][k]==i?'selected':''}>${i}</option>`;return`<select onchange="I('${t}','${k}',this.value)">${o}</select>`}
 function half(t){return[1,2].map(h=>`<button class="c ${F[t].half==h?'on':''}" onclick="F.${t}.half=${h};render()">الشوط ${h==1?'الأول':'الثاني'}</button>`).join('')}
-function rosterUI(t){const R=DB.roster||[],f=F[t],gk=t=='d'&&f.res=='صدة',L=R.map((p,i)=>[p,i]).filter(([p])=>gk?p.gk:!p.gk);
- let h=`<div>${L.map(([p,i])=>`<button class="c ${f.pname==p.name&&f.pnum==p.num?'on':''}" onclick="${showRo?`rdel(${i})`:`rpick('${t}',${i})`}">${p.gk?'🧤 ':''}${esc(p.num)} ${esc(p.name)}${showRo?' ✕':''}</button>`).join('')||'<small>لا يوجد '+(gk?'حراس':'لاعبين')+' في القائمة</small>'}</div>`;
- h+=`<button class="sm" onclick="showRo=!showRo;render()">${showRo?'تم':'إدارة اللاعبين'}</button>`;
- if(showRo)h+=`<div class="row" style="margin-top:8px"><input id="rn" placeholder="اسم اللاعب"><input id="ru" type="number" style="width:90px" placeholder="الرقم"><label><input id="rg" type="checkbox"> حارس</label><button class="sm" onclick="radd()">إضافة</button></div>`;
- return h}
+const ad=v=>String(v).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[^0-9]/g,'');
+let RE=-1;
+const rsort=()=>DB.roster.sort((a,b)=>(+a.num||999)-(+b.num||999));
+function rosterUI(t){const R=DB.roster||[],f=F[t],gk=t=='d'&&f.res=='صدة';
+ if(showRo){const p=RE>=0?R[RE]:{name:'',num:'',gk:false};
+  return `<div>${R.map((q,i)=>`<div class="row" style="padding:4px 0;border-bottom:1px solid var(--line)"><b style="flex:1">${q.gk?'🧤 ':''}${esc(q.num)} ${esc(q.name)}</b><button class="sm" onclick="redit(${i})">تعديل</button><button class="sm x" onclick="rdel(${i})">حذف</button></div>`).join('')||'<small>القائمة فاضية</small>'}</div><div class="row" style="margin-top:8px"><input id="rn" placeholder="اسم اللاعب" value="${esc(p.name)}"><input id="ru" type="text" inputmode="numeric" style="width:90px" placeholder="الرقم" value="${esc(p.num)}" oninput="this.value=ad(this.value)"><label><input id="rg" type="checkbox" ${p.gk?'checked':''}> حارس</label><button class="sm" onclick="rsave()">${RE>=0?'حفظ التعديل':'إضافة'}</button>${RE>=0?'<button class="sm x" onclick="RE=-1;render()">إلغاء</button>':''}</div><button class="sm" onclick="showRo=false;RE=-1;render()">تم</button>`}
+ const L=R.map((q,i)=>[q,i]).filter(([q])=>gk?q.gk:!q.gk);
+ return `<div>${L.map(([q,i])=>`<button class="c ${f.pname==q.name&&f.pnum==q.num?'on':''}" onclick="rpick('${t}',${i})">${q.gk?'🧤 ':''}${esc(q.num)} ${esc(q.name)}</button>`).join('')||'<small>لا يوجد '+(gk?'حراس':'لاعبين')+' في القائمة، اكتب الاسم تحت وهيتضاف تلقائي بعد الحفظ</small>'}</div><button class="sm" onclick="showRo=true;render()">إدارة اللاعبين</button>`}
 function rpick(t,i){const p=DB.roster[i];F[t].pname=p.name;F[t].pnum=p.num;render()}
-function radd(){const n=document.getElementById('rn').value.trim(),u=document.getElementById('ru').value.trim();if(!n)return alert('اكتب اسم اللاعب');DB.roster=DB.roster||[];DB.roster.push({name:n,num:u,gk:document.getElementById('rg').checked});DB.roster.sort((a,b)=>(+a.num||999)-(+b.num||999));save();render()}
-function rdel(i){if(confirm('حذف '+DB.roster[i].name+' من القائمة؟')){DB.roster.splice(i,1);save();render()}}
+function redit(i){RE=i;render()}
+function rsave(){const n=document.getElementById('rn').value.trim(),u=ad(document.getElementById('ru').value.trim()),g=document.getElementById('rg').checked;if(!n)return alert('اكتب اسم اللاعب');
+ DB.roster=DB.roster||[];
+ if(RE>=0){const o=DB.roster[RE];DB.recs.forEach(r=>{if(r.pname==o.name&&String(r.pnum||'')==String(o.num||'')){r.pname=n;r.pnum=u}});DB.roster[RE]={name:n,num:u,gk:g};RE=-1}
+ else DB.roster.push({name:n,num:u,gk:g});
+ rsort();save();render()}
+function rdel(i){if(confirm('حذف '+DB.roster[i].name+' من القائمة؟')){DB.roster.splice(i,1);RE=-1;save();render()}}
+function autoRoster(f,t){const n=(f.pname||'').trim();if(!n)return;const R=DB.roster=DB.roster||[],ex=R.find(p=>p.name.trim().toLowerCase()==n.toLowerCase());
+ if(ex){if(!ex.num&&f.pnum)ex.num=String(f.pnum)}else R.push({name:n,num:String(f.pnum||''),gk:t=='d'&&f.res=='صدة'});rsort()}
 function form(t){const f=F[t],A=t=='a';
  return`<div class="card"><h3>رقم ${A?'الهجمة':'الهجمة (للمنافس)'}</h3>${num(t,'n',60,1)}</div>
 <div class="card"><h3>النتيجة</h3>${chips(t,'res',RES)}${f.res=='ترن أوفر'?`<div><b>نوع الترن أوفر:</b> ${chips(t,'sub',TO)}</div>`:''}</div>
-<div class="card"><h3>${A?'اللاعب منهي الهجمة':'المدافع (أو الحارس عند تسجيل صدة)'}</h3>${rosterUI(t)}<div class="row"><input list="pn" placeholder="الاسم" value="${esc(f.pname)}" oninput="I('${t}','pname',this.value)"><input list="pu" type="number" style="width:90px" placeholder="الرقم" value="${esc(f.pnum)}" oninput="I('${t}','pnum',this.value)"></div></div>
+<div class="card"><h3>${A?'اللاعب منهي الهجمة':'المدافع (أو الحارس عند تسجيل صدة)'}</h3>${rosterUI(t)}<div class="row"><input list="pn" placeholder="الاسم" value="${esc(f.pname)}" oninput="I('${t}','pname',this.value)"><input list="pu" type="text" inputmode="numeric" style="width:90px" placeholder="الرقم" value="${esc(f.pnum)}" oninput="this.value=ad(this.value);I('${t}','pnum',this.value)"></div></div>
 <div class="card"><h3>${A?'مكان إنهاء الهجمة':'نوع الخطأ الدفاعي'}</h3>${chips(t,A?'loc':'err',A?AL:DE)}</div>
 ${A?'':`<div class="card"><h3>مكان الخطأ الدفاعي</h3>${chips(t,'loc',DL)}</div><div class="card"><h3>رقم الهدف</h3>${num(t,'gn',60,1)}</div>`}
 <div class="card"><h3>التوقيت</h3>${half(t)} ${num(t,'min',30,1)} دقيقة</div>
 <div class="card"><h3>القرار النهائي</h3><button class="c ok ${f.dec=='✔'?'on':''}" onclick="S('${t}','dec','✔')">✔</button><button class="c no ${f.dec=='❌'?'on':''}" onclick="S('${t}','dec','❌')">❌</button></div>
 <button class="save" onclick="add('${t}')">حفظ ${A?'الهجمة':'الدفاع'}</button>`}
 function add(t){const f=F[t];if(!f.res)return alert('اختر نتيجة الهجمة');if(!f.dec)return alert('اختر القرار ✔ أو ❌');
- DB.recs.push({...f,t,id:Date.now()});save();F[t]={half:f.half,min:f.min};init();render()}
+ DB.recs.push({...f,t,id:Date.now()});autoRoster(f,t);save();F[t]={half:f.half,min:f.min};init();render()}
 function del(id){if(confirm('حذف التسجيل؟')){DB.recs=DB.recs.filter(r=>r.id!=id);save();init();render()}}
 function edit(id){const r=DB.recs.find(x=>x.id==id);DB.recs=DB.recs.filter(x=>x.id!=id);F[r.t]={...r,ds:1};save();tab=r.t;render()}
 function log(){const rows=DB.recs.slice().sort((a,b)=>a.t==b.t?a.n-b.n:a.t<b.t?-1:1).map(r=>`<tr><td>${r.t=='a'?'هجوم':'دفاع'}</td><td>${r.n||''}</td><td>${r.res}${r.sub?' ('+r.sub+')':''}</td><td>${esc(r.pnum)} ${esc(r.pname)}</td><td>${r.t=='a'?r.loc||'':(r.err||'')+' / '+(r.loc||'')}</td><td>${r.gn||''}</td><td>ش${r.half} د${r.min||''}</td><td>${r.dec}</td><td><button class="sm" onclick="edit(${r.id})">تعديل</button><button class="sm x" onclick="del(${r.id})">حذف</button></td></tr>`).join('');
