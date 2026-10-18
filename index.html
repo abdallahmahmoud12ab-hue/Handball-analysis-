@@ -54,11 +54,14 @@ tr:nth-child(even) td{background:#fafbfd}
 .dash>h3{margin:18px 4px 8px}
 @page{size:A4;margin:10mm}
 @media print{*{-webkit-print-color-adjust:exact;print-color-adjust:exact}.dash{display:none!important}.pgb{break-before:page}.rep .card{padding:8px 10px;margin-bottom:8px}.rep th,.rep td{padding:4px 6px;font-size:12px}.rep .sc b{font-size:34px}.rep .kpi b{font-size:18px}body{font-size:12px}}
+.ft{direction:ltr;text-align:center;color:var(--mut);font-size:12px;line-height:1.5;padding:14px 12px 28px}
+@media print{@page{size:A4;margin:10mm 10mm 16mm}.ft{position:fixed;bottom:0;left:0;right:0;padding:4px 0 0;border-top:1px solid #bbb;background:#fff;font-size:10px;color:#444}}
 </style></head><body>
 <header><h1>تحليل مباراة كرة اليد</h1>
 <input id="mt" placeholder="اسم فريقك"><input id="mo" placeholder="اسم المنافس"><input id="md" type="date"></header>
 <nav><button data-t="a">⚔ هجوم</button><button data-t="d">🛡 دفاع</button><button data-t="log">السجل</button><button data-t="st">الإحصائيات</button></nav>
 <main><div id="app"></div></main>
+<footer class="ft">Designed &amp; Programmed by C. Mahmoud Mostafa &amp; Eng. Abdallah Mahmoud<br>&copy; 2026 All Rights Reserved</footer>
 <datalist id="pn"></datalist><datalist id="pu"></datalist>
 <script>
 const RES=['هدف','صدة','خارج','عرضة','بلوك','ترن أوفر'];
@@ -162,7 +165,8 @@ function report(){const A=DB.recs.filter(r=>r.t=='a'),D=DB.recs.filter(r=>r.t=='
  <div class="card"><h3>ثالثاً: تحليل أهداف وهجمات ${esc(on)} (${O} هدف)</h3>${tbl(['منطقة الأهداف','الأهداف','النسبة'],oz.map(([x,n])=>[x,n,pc(n,O)]))}${tbl(['سبب ضياع هجمات '+esc(on),'العدد','النسبة'],[...lr.map(([x,n])=>[x,n,pc(n,NO.length)]),['إجمالي الهجمات الضائعة',NO.length,NO.length?'100%':'-']])}</div>
  <div class="card"><h3>رابعاً: زمن العقم التهديفي المجمع (${tot} دقيقة بدون أهداف)</h3>${dr.map(d=>`<h4>الشوط ${d.h==1?'الأول':'الثاني'}: ${d.s} دقيقة عقم تهديفي</h4><p>سجل التهديف: ${d.bk.map(b=>`د ${b[0]} إلى د ${b[1]}: <b>${b[2]}</b> أهداف`).join(' | ')}</p><p>أوقات بلا أهداف (${d.lost} هجمة ضائعة):</p><ul>${d.gp.map(g=>`<li>د${g.a} إلى د${g.b} (${g.b-g.a} دقائق) - ضاع ${g.n} هجمات</li>`).join('')||'<li>لا يوجد</li>'}</ul>`).join('')}</div></section>`;
  return h}
-function tools(){return`<div class="tools card"><button onclick="exp()">حفظ ملف المباراة</button><button onclick="document.getElementById('f').click()">فتح ملف مباراة</button><button onclick="window.print()">تصدير PDF / طباعة</button><button style="background:#c62f2f" onclick="reset()">مباراة جديدة</button><input id="f" type="file" accept=".json" class="hide" onchange="imp(this)"></div>`}
+function pr(){tab="st";render();scrollTo(0,0);setTimeout(()=>window.print(),300)}
+function tools(){return`<div class="tools card"><button onclick="exp()">حفظ ملف المباراة</button><button onclick="document.getElementById('f').click()">فتح ملف مباراة</button><button onclick="pr()">تصدير PDF / طباعة</button><button style="background:#c62f2f" onclick="reset()">مباراة جديدة</button><input id="f" type="file" accept=".json" class="hide" onchange="imp(this)"></div>`}
 function exp(){const b=new Blob([JSON.stringify(DB)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=(DB.m.team||'match')+'-vs-'+(DB.m.opp||'opp')+'.json';a.click()}
 function imp(el){const r=new FileReader();r.onload=()=>{try{DB=JSON.parse(r.result);save();init();fill();render()}catch(e){alert('ملف غير صالح')}};r.readAsText(el.files[0])}
 function reset(){if(confirm('هتمسح كل بيانات المباراة الحالية. متأكد؟ (احفظ الملف الأول)')){DB={m:{team:'',opp:'',date:''},recs:[]};save();F={a:{half:1,min:1},d:{half:1,min:1}};init();fill();render()}}
