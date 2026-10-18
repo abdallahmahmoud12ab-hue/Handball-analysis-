@@ -62,7 +62,9 @@ tr:nth-child(even) td{background:#fafbfd}
 .ihf .ml{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 2px;gap:8px}.ihf .sc{font-size:19px;font-weight:700;text-align:center}.ihf .hv{font-size:12px;font-weight:400}
 .it{width:100%;border-collapse:collapse;margin:3px 0 6px}.it th,.it td{border:1px solid #444;padding:2px 4px;text-align:center;font-size:11px;background:#fff}.it th{background:#e6e6e6}.it td:nth-child(2){text-align:left}.it.tt tr:last-child td{font-weight:700;background:#f0f0f0}
 .ihf .two{display:flex;gap:14px}.ihf .two>div{flex:1}.ihf .cl{font-size:10px;text-align:center}.ihf svg text{fill:#000;font-family:Arial,sans-serif}
-@media print{.ihf{padding:0;border-radius:0}.pgi{break-before:page}.ihf section{break-inside:avoid}}
+@media print{.ihf{padding:0;border-radius:0}.pgi{break-before:page}}
+.ihf.rtl{direction:rtl}.ihf.rtl .it td:nth-child(2){text-align:right}.it.pb td{text-align:start}.it.pb td:nth-child(1){width:9%}.it.pb td:nth-child(3){width:11%;text-align:center;font-weight:700}.it.pb tr.gg td{background:#f2f2f2}.ihf .rf{font-size:11px;margin:2px 0 6px}.it.sg td{height:34px}.it thead{display:table-header-group}.it tr{break-inside:avoid}
+@media print{.np{display:none!important}}
 </style></head><body>
 <header><h1>تحليل مباراة كرة اليد</h1>
 <input id="mt" placeholder="اسم فريقك"><input id="mo" placeholder="اسم المنافس"><input id="md" type="date"><input id="mc" placeholder="اسم البطولة"><input id="mv" placeholder="الصالة"></header>
@@ -209,41 +211,59 @@ function droughtHTML(dr,A,D,tot,tn,on){
  <p class="lg"><span style="color:#1b6ca8">■</span> ${esc(tn)} &nbsp; <span style="color:#ff6a1f">■</span> ${esc(on)}</p>${chart}
  <h4>الفترات بدون أهداف</h4>${tbl(['الشوط','الفترة','المدة','هجمات ضائعة'],per)}
  <p class="lg"><span style="color:#12905a">▍</span> هدف &nbsp; <span style="color:#e58a96">■</span> فترة عقم</p>${strip}</div>`}
-const ZL=['9m','6m','Wing','7m','FB','Brk','EN'];
+let LG=(DB.m&&DB.m.lang)||'en';
+const TR={en:{off:'Official Match Report',res:'Results',mts:'Match Team Statistics',pbp:'Play by play',nm:'Surname and name',tot:'Tot.',z9:'9m',z6:'6m',zw:'Wing',z7:'7m',zf:'FB',zb:'Brk.',ze:'EN',tf:'TF',gk:'Goalkeepers',sv:'Saves',total:'TOTAL',na:'Number of attacks',ef:'Efficiency',ss:'Shooting statistics',pos:'Position',g:'Goals',sav:'Sav.',mis:'Miss.',post:'Post',blk:'Blk.',tt:'Total',p9:'Back (9m)',p6:'Line (6m)',pw:'Wing',p7:'7m penalties',pf:'Fastbreak',pb:'Breakthrough',pe:'Empty net',sbp:'Shots by position',sp:'Score progression',draw:'draw',wl:'Wing L',wr:'Wing R',h1:'1. period',h2:'2. period',time:'Time',rs:'Result',ht:'Half time',fin:'End of playing time',spc:'Spectators',mno:'Match number',ref:'Referees',coach:'Coach',gks:'GK',goal:'Goal',saved:'saved',out:'miss.',postx:'post',block:'block',tfx:'Technical Fault',fr:'from',sig:'Signatures',tgl:'Goals sequence'},
+ar:{off:'التقرير الرسمي للمباراة',res:'النتائج',mts:'إحصائيات الفريقين',pbp:'تسلسل أحداث المباراة',nm:'الاسم',tot:'الإجمالي',z9:'9م',z6:'6م',zw:'جناح',z7:'7م',zf:'خاطف',zb:'اختراق',ze:'مرمى خالي',tf:'أخطاء فنية',gk:'الحراس',sv:'التصديات',total:'الإجمالي',na:'عدد الهجمات',ef:'الفاعلية',ss:'إحصائيات التصويب',pos:'المنطقة',g:'أهداف',sav:'صدات',mis:'خارج',post:'عارضة',blk:'بلوك',tt:'المجموع',p9:'من 9م',p6:'من 6م (الدائرة)',pw:'الجناح',p7:'ركلات 7م',pf:'هجوم خاطف',pb:'اختراق',pe:'مرمى خالي',sbp:'التصويب حسب المنطقة',sp:'تطور النتيجة',draw:'تعادل',wl:'جناح أيسر',wr:'جناح أيمن',h1:'الشوط الأول',h2:'الشوط الثاني',time:'الدقيقة',rs:'النتيجة',ht:'نهاية الشوط الأول',fin:'النتيجة النهائية',spc:'الجمهور',mno:'رقم المباراة',ref:'الحكام',coach:'المدرب',gks:'الحارس',goal:'هدف',saved:'صدة',out:'خارج',postx:'عارضة',block:'بلوك',tfx:'خطأ فني',fr:'من',sig:'التوقيعات',tgl:'تسلسل الأهداف'}},T=k=>TR[LG][k]||k;
+const ZL=['9m','6m','Wing','7m','FB','Brk','EN'],ZK=['z9','z6','zw','z7','zf','zb','ze'];
+const LE={'9م':'9m','6م':'6m','7م':'7m','دائرة':'Circle','جناح أيمن':'Right wing','جناح أيسر':'Left wing','هجوم خاطف':'Fastbreak','سنتر سريعة':'Fast center','مرمى خالي':'Empty goal'},SE={'باص خاطئ':'Bad pass','استلام خاطئ':'Bad catch','فاول عكسي':'Offensive foul','دبل دربل':'Double dribble','فوتنج':'Footing','4 خطوات':'Steps'};
+const locT=x=>LG=='en'?(LE[x]||x):x,subT=x=>LG=='en'?(SE[x]||x):x;
 const az=r=>({'9م':'9m','6م':'6m','دائرة':'6m','جناح أيمن':'Wing','جناح أيسر':'Wing','7م':'7m','هجوم خاطف':'FB','سنتر سريعة':'Brk','مرمى خالي':'EN'}[r.loc]||'');
 const dz=r=>r.err=='مرمى خالي'?'EN':/الهجوم السريع/.test(r.err||'')?'FB':({'9م':'9m','6م':'6m','جناح أيمن':'Wing','جناح أيسر':'Wing'}[r.loc]||'');
 const SH=L=>L.filter(r=>r.res!='ترن أوفر'),gl=L=>L.filter(r=>r.res=='هدف').length;
 const zc=(L,f,z)=>{const a=SH(L).filter(r=>f(r)==z);return a.length?gl(a)+'/'+a.length:''};
-const rt=L=>{const n=SH(L).length;return gl(L)+'/'+n};
-const pp=(a,b)=>b?Math.round(a/b*100):'';
+const rt=L=>gl(L)+'/'+SH(L).length,pp=(a,b)=>b?Math.round(a/b*100):'';
 function itb(h,rows,c){return `<table class="it ${c||''}"><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr>${rows.map(r=>`<tr>${r.map(x=>`<td>${x}</td>`).join('')}</tr>`).join('')}</table>`}
-function shootTbl(L,f){const P=[['Back (9m)','9m'],['Line (6m)','6m'],['Wing','Wing'],['7m penalties','7m'],['Fastbreak','FB'],['Breakthrough','Brk'],['Empty net','EN']],c=(a,x)=>a.filter(r=>r.res==x).length,t=[0,0,0,0,0,0];
- const rows=P.map(([n,z])=>{const a=SH(L).filter(r=>f(r)==z),v=[gl(a),c(a,'صدة'),c(a,'خارج'),c(a,'عرضة'),c(a,'بلوك'),a.length];v.forEach((x,i)=>t[i]+=x);return [n,...v,pp(v[0],v[5])]});
- return itb(['Position','Goals','Sav.','Miss.','Post','Blk.','Total','%'],[...rows,['Total',...t,pp(t[0],t[5])]],'tt')}
-function court(L,t){const w=(x)=>{const a=SH(L).filter(r=>r.loc==x);return gl(a)+'/'+a.length},z=x=>{const a=SH(L).filter(r=>az(r)==x||dz(r)==x);return a.length};
+function shootTbl(L,f){const P=[['p9','9m'],['p6','6m'],['pw','Wing'],['p7','7m'],['pf','FB'],['pb','Brk'],['pe','EN']],c=(a,x)=>a.filter(r=>r.res==x).length,t=[0,0,0,0,0,0];
+ const rows=P.map(([n,z])=>{const a=SH(L).filter(r=>f(r)==z),v=[gl(a),c(a,'صدة'),c(a,'خارج'),c(a,'عرضة'),c(a,'بلوك'),a.length];v.forEach((x,i)=>t[i]+=x);return [T(n),...v,pp(v[0],v[5])]});
+ return itb([T('pos'),T('g'),T('sav'),T('mis'),T('post'),T('blk'),T('tt'),'%'],[...rows,[T('tt'),...t,pp(t[0],t[5])]],'tt')}
+function court(L,t){const w=x=>{const a=SH(L).filter(r=>r.loc==x);return gl(a)+'/'+a.length},zf=t=='d'?dz:az,g=x=>{const a=SH(L).filter(r=>zf(r)==x);return gl(a)+'/'+a.length};
  const lb=(x,y,n,v)=>`<text x="${x}" y="${y}" font-size="11" font-weight="700">${v}</text><text x="${x}" y="${y+10}" font-size="8" fill="#555">${n}</text>`;
- const g=(zf,x)=>{const a=SH(L).filter(r=>zf(r)==x);return gl(a)+'/'+a.length},zf=t=='d'?dz:az;
- return `<svg viewBox="0 0 230 175" style="width:100%;height:auto"><rect x="1" y="1" width="228" height="173" fill="none" stroke="#000"/><rect x="1" y="72" width="8" height="30" fill="none" stroke="#000" stroke-width="2"/><path d="M1,28 C58,28 72,52 72,87 C72,122 58,146 1,146" fill="none" stroke="#000"/><path d="M1,5 C100,5 122,45 122,87 C122,129 100,169 1,169" fill="none" stroke="#000" stroke-dasharray="4 3"/>${lb(14,18,'Wing L',w('جناح أيسر'))}${lb(14,160,'Wing R',w('جناح أيمن'))}${lb(40,88,'6m',g(zf,'6m'))}${lb(88,88,'9m',g(zf,'9m'))}</svg><div class="cl">7m penalties ${g(zf,'7m')} &nbsp; Fastbreak ${g(zf,'FB')} &nbsp; Breakthrough ${g(zf,'Brk')} &nbsp; Empty net ${g(zf,'EN')}</div>`}
+ return `<svg viewBox="0 0 230 175" style="width:100%;height:auto;direction:ltr"><rect x="1" y="1" width="228" height="173" fill="none" stroke="#000"/><rect x="1" y="72" width="8" height="30" fill="none" stroke="#000" stroke-width="2"/><path d="M1,28 C58,28 72,52 72,87 C72,122 58,146 1,146" fill="none" stroke="#000"/><path d="M1,5 C100,5 122,45 122,87 C122,129 100,169 1,169" fill="none" stroke="#000" stroke-dasharray="4 3"/>${lb(14,18,T('wl'),w('جناح أيسر'))}${lb(14,160,T('wr'),w('جناح أيمن'))}${lb(40,88,T('z6'),g('6m'))}${lb(88,88,T('z9'),g('9m'))}</svg><div class="cl">${T('p7')} ${g('7m')} &nbsp; ${T('pf')} ${g('FB')} &nbsp; ${T('pb')} ${g('Brk')} &nbsp; ${T('pe')} ${g('EN')}</div>`}
 function prog(A,D,tn,on){const tm=r=>(r.half==2?30:0)+(+r.min||0),E=[...A.filter(r=>r.res=='هدف').map(r=>[tm(r),1]),...D.filter(r=>r.res=='هدف').map(r=>[tm(r),-1])].sort((a,b)=>a[0]-b[0]);
  let d=0,pts=[[0,0]],mx=4;E.forEach(([t,v])=>{pts.push([t,d]);d+=v;pts.push([t,d]);mx=Math.max(mx,Math.abs(d))});pts.push([60,d]);
- const W=700,H=250,L=80,R=10,T=8,B=22,X=t=>L+t/60*(W-L-R),Y=v=>T+(mx-v)/(2*mx)*(H-T-B),st=mx>8?2:1;let g='';
- for(let v=-mx;v<=mx;v+=st)g+=`<line x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" stroke="#ccc"/><text x="${L-4}" y="${Y(v)+3}" font-size="9" text-anchor="end">${v==0?'draw':v>0?esc(tn)+' +'+v:esc(on)+' +'+(-v)}</text>`;
- for(let t=0;t<=60;t+=10)g+=`<line x1="${X(t)}" x2="${X(t)}" y1="${T}" y2="${H-B}" stroke="#ddd"/><text x="${X(t)}" y="${H-8}" font-size="10" text-anchor="middle">${t}'</text>`;
- return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto">${g}<polyline fill="none" stroke="#000" stroke-width="1.4" points="${pts.map(q=>X(q[0])+','+Y(q[1])).join(' ')}"/></svg>`}
-function ihfReport(){const M=DB.m,tn=M.team||'Team',on=M.opp||'Opponent',A=DB.recs.filter(r=>r.t=='a'),D=DB.recs.filter(r=>r.t=='d'),T=gl(A),O=gl(D),hv=h=>[gl(A.filter(r=>r.half==h)),gl(D.filter(r=>r.half==h))];
- const H1=['#','Surname and name','Tot.','%',...ZL,'TF'],pm={};A.forEach(r=>{const k=(r.pnum||'')+'|'+(r.pname||'');(pm[k]=pm[k]||[]).push(r)});
+ const W=700,H=250,L=80,R=10,Tp=8,B=22,X=t=>L+t/60*(W-L-R),Y=v=>Tp+(mx-v)/(2*mx)*(H-Tp-B),st=mx>8?2:1;let g='';
+ for(let v=-mx;v<=mx;v+=st)g+=`<line x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" stroke="#ccc"/><text x="${L-4}" y="${Y(v)+3}" font-size="9" text-anchor="end">${v==0?T('draw'):v>0?esc(tn)+' +'+v:esc(on)+' +'+(-v)}</text>`;
+ for(let t=0;t<=60;t+=10)g+=`<line x1="${X(t)}" x2="${X(t)}" y1="${Tp}" y2="${H-B}" stroke="#ddd"/><text x="${X(t)}" y="${H-8}" font-size="10" text-anchor="middle">${t}'</text>`;
+ return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;direction:ltr">${g}<polyline fill="none" stroke="#000" stroke-width="1.4" points="${pts.map(q=>X(q[0])+','+Y(q[1])).join(' ')}"/></svg>`}
+function pbpRows(A,D){const tm=r=>(r.half==2?30:0)+(+r.min||0),nm=r=>(r.pnum?'('+esc(r.pnum)+') ':'')+(esc(r.pname)||'-'),fr=r=>r.loc?' '+T('fr')+' '+esc(locT(r.loc)):'';
+ const ev=[...A.map(r=>({r,s:'a'})),...D.map(r=>({r,s:'d'}))].sort((x,y)=>tm(x.r)-tm(y.r)||(x.r.id||0)-(y.r.id||0));let a=0,b=0;
+ return ev.map(({r,s})=>{const g=r.res=='هدف',w={'هدف':T('goal'),'صدة':T('saved'),'خارج':T('out'),'عرضة':T('postx'),'بلوك':T('block')}[r.res]||'',to=r.res=='ترن أوفر';let ta='',tb='',sc='';
+  if(g){s=='a'?a++:b++;sc=a+':'+b}
+  if(s=='a')ta=to?nm(r)+' '+T('tfx')+(r.sub?' ('+esc(subT(r.sub))+')':''):nm(r)+' '+w+fr(r);
+  else{ta=r.pname?(r.res=='صدة'?'('+T('gks')+': '+esc(r.pname)+')':nm(r)):'';tb=to?T('tfx'):w+fr(r)}
+  return {t:tm(r),h:r.half==2?2:1,ta,tb,sc,g}})}
+function ihfSet(k,v){DB.m[k]=v;save()}
+function setLg(l){LG=l;DB.m.lang=l;save();render()}
+function ihfBar(){const M=DB.m,f=(k,p)=>`<input placeholder="${p}" value="${esc(M[k])}" oninput="ihfSet('${k}',this.value)">`;
+ return `<div class="card np"><h3>إعدادات تقرير IHF</h3><div class="row">${f('rnd','الدور (مثال: Preliminary Round)')}${f('refs','الحكام')}${f('spc','الجمهور')}${f('mno','رقم المباراة')}${f('ca','مدرب فريقك')}${f('cb','مدرب المنافس')}</div><div class="row" style="margin-top:8px"><b>لغة التقرير:</b><button class="c ${LG=='en'?'on':''}" onclick="setLg('en')">English</button><button class="c ${LG=='ar'?'on':''}" onclick="setLg('ar')">العربية</button></div></div>`}
+function ihfReport(){const M=DB.m,tn=M.team||'Team',on=M.opp||'Opponent',A=DB.recs.filter(r=>r.t=='a'),D=DB.recs.filter(r=>r.t=='d'),T1=gl(A),O1=gl(D),hv=h=>[gl(A.filter(r=>r.half==h)),gl(D.filter(r=>r.half==h))];
+ const hdr=ti=>`<div class="hd"><h2>${esc(M.comp||'Handball Match')}</h2><div>${esc([M.rnd,M.venue].filter(Boolean).join(' - '))}</div></div><div class="ml"><div><b>${ti}</b>${M.mno?'<br>'+T('mno')+' '+esc(M.mno):''}</div><div class="sc">${esc(tn)} ${T1} - ${O1} ${esc(on)}<div class="hv">(${hv(1).join(' - ')}) (${hv(2).join(' - ')})</div></div><div>${esc(M.date||'')}${M.spc?'<br>'+T('spc')+': '+esc(M.spc):''}</div></div>${M.refs?`<div class="rf">${T('ref')}: ${esc(M.refs)}</div>`:''}`;
+ const H1=['#',T('nm'),T('tot'),'%',...ZK.map(k=>T(k)),T('tf')],GH=['#',T('nm'),T('sv'),T('tot'),'%',...ZK.map(k=>T(k))],pm={};A.forEach(r=>{const k=(r.pnum||'')+'|'+(r.pname||'');(pm[k]=pm[k]||[]).push(r)});
  const tf=L=>L.filter(r=>r.res=='ترن أوفر').length||'';
- const rowOf=(n,nm,L,f)=>[n,nm,SH(L).length?rt(L):'',pp(gl(L),SH(L).length),...ZL.map(z=>zc(L,f,z)),tf(L)];
- const pr=Object.entries(pm).sort((a,b)=>(+a[0].split('|')[0]||999)-(+b[0].split('|')[0]||999)).map(([k,L])=>{const q=k.split('|');return rowOf(esc(q[0]),esc(q[1])||'-',L,az)});
+ const pr=Object.entries(pm).sort((a,b)=>(+a[0].split('|')[0]||999)-(+b[0].split('|')[0]||999)).map(([k,L])=>{const q=k.split('|');return [esc(q[0]),esc(q[1])||'-',SH(L).length?rt(L):'',pp(gl(L),SH(L).length),...ZL.map(z=>zc(L,az,z)),tf(L)]});
  const sv=D.filter(r=>r.res=='صدة'),km={};sv.forEach(r=>{const k=(r.pnum||'')+'|'+(r.pname||'');km[k]=(km[k]||0)+1});
- const gkRow=(L,f,saves)=>{const g=L.filter(r=>r.res=='هدف'||r.res=='صدة'),n=g.length;return ['','TOTAL',saves,n?saves+'/'+n:'',pp(saves,n),...ZL.map(z=>{const a=g.filter(r=>f(r)==z);return a.length?a.filter(r=>r.res=='صدة').length+'/'+a.length:''})]};
- const GH=['#','Surname and name','Saves','Tot.','%',...ZL];
- const gk=[...Object.entries(km).map(([k,n])=>{const q=k.split('|');return [esc(q[0]),esc(q[1])||'-',n,'','',...ZL.map(()=>'')]}),gkRow(D,dz,sv.length)];
- const sa=A.filter(r=>r.res=='صدة').length,hd=`<div class="hd"><h2>${esc(M.comp||'Handball Match')}</h2><div>${esc(M.venue||'')}</div></div><div class="ml"><div><b>Match Team Statistics</b></div><div class="sc">${esc(tn)} ${T} - ${O} ${esc(on)}<div class="hv">(${hv(1).join(' - ')}) (${hv(2).join(' - ')})</div></div><div>${esc(M.date||'')}</div></div>`;
- return `<div class="ihf"><section>${hd}<h3>${esc(tn)}</h3>${itb(H1,[...pr,['','TOTAL',rt(A),pp(T,SH(A).length),...ZL.map(z=>zc(A,az,z)),tf(A)]],'tt')}<h4>Goalkeepers</h4>${itb(GH,gk,'tt')}<p>Number of attacks: <b>${A.length}</b>, Efficiency: <b>${A.length?pp(T,A.length)+'%':'-'}</b></p></section>
- <section class="pgi">${hd}<h3>${esc(on)}</h3>${itb(H1,[['','TOTAL',rt(D),pp(O,SH(D).length),...ZL.map(z=>zc(D,dz,z)),tf(D)]],'tt')}<h4>Goalkeepers</h4>${itb(GH,[gkRow(A,az,sa)],'tt')}<p>Number of attacks: <b>${D.length}</b>, Efficiency: <b>${D.length?pp(O,D.length)+'%':'-'}</b></p>
- <h3>Shooting statistics - ${esc(tn)}</h3>${shootTbl(A,az)}<h3>Shooting statistics - ${esc(on)}</h3>${shootTbl(D,dz)}</section>
- <section class="pgi">${hd}<h3>Shots by position</h3><div class="two"><div><b>${esc(tn)}</b>${court(A,'a')}</div><div><b>${esc(on)}</b>${court(D,'d')}</div></div><h3>Score progression</h3>${prog(A,D,tn,on)}</section></div>`}
+ const gkRow=(L,f,s)=>{const g=L.filter(r=>r.res=='هدف'||r.res=='صدة'),n=g.length;return ['',T('total'),s,n?s+'/'+n:'',pp(s,n),...ZL.map(z=>{const a=g.filter(r=>f(r)==z);return a.length?a.filter(r=>r.res=='صدة').length+'/'+a.length:''})]};
+ const gk=[...Object.entries(km).map(([k,n])=>{const q=k.split('|');return [esc(q[0]),esc(q[1])||'-',n,'','',...ZL.map(()=>'')]}),gkRow(D,dz,sv.length)],sa=A.filter(r=>r.res=='صدة').length;
+ const ro=new Map();(DB.roster||[]).forEach(p=>ro.set(p.num+'|'+p.name,[p.num,p.name,0]));A.forEach(r=>{const k=(r.pnum||'')+'|'+(r.pname||'');if(!ro.has(k)&&(r.pname||r.pnum))ro.set(k,[r.pnum||'',r.pname||'',0]);if(r.res=='هدف'&&ro.has(k))ro.get(k)[2]++});
+ const pl=[...ro.values()].sort((x,y)=>(+x[0]||999)-(+y[0]||999)).map(p=>[esc(p[0]),esc(p[1]),p[2]||'']);
+ const rows=pbpRows(A,D),pt=L=>{let cur=0;return `<table class="it pb"><thead><tr><th>${T('time')}</th><th>${esc(tn)}</th><th>${T('rs')}</th><th>${esc(on)}</th></tr></thead><tbody>${L.map(x=>{let o='';if(x.h!=cur){cur=x.h;o=`<tr><th colspan="4">${T(x.h==2?'h2':'h1')}</th></tr>`}return o+`<tr class="${x.g?'gg':''}"><td>${x.t}'</td><td>${x.ta}</td><td>${x.sc}</td><td>${x.tb}</td></tr>`}).join('')}</tbody></table>`};
+ const ef=(n,g)=>n?pp(g,n)+'%':'-';
+ return `<div class="ihf ${LG=='ar'?'rtl':''}"><section>${hdr(T('off'))}${itb([T('ht'),T('fin')],[[hv(1).join(' - '),T1+' - '+O1]])}<div class="two"><div><h4>${esc(tn)}</h4>${itb(['#',T('nm'),T('g')],[...pl,['',T('total'),T1]],'tt')}</div><div><h4>${esc(on)}</h4>${itb([T('coach')],[[esc(M.cb)||'&nbsp;']])}</div></div><p>${esc(tn)} - ${T('coach')}: ${esc(M.ca)||'-'}</p><h4>${T('sig')}</h4>${itb([T('sig'),''],[[esc(tn),''],[esc(on),''],[T('ref'),'']],'sg')}</section>
+ <section class="pgi">${hdr(T('res'))}<h3>${T('tgl')}</h3>${pt(rows.filter(x=>x.g))}</section>
+ <section class="pgi">${hdr(T('mts'))}<h3>${esc(tn)}</h3>${itb(H1,[...pr,['',T('total'),rt(A),pp(T1,SH(A).length),...ZL.map(z=>zc(A,az,z)),tf(A)]],'tt')}<h4>${T('gk')}</h4>${itb(GH,gk,'tt')}<p>${T('na')}: <b>${A.length}</b>, ${T('ef')}: <b>${ef(A.length,T1)}</b></p></section>
+ <section class="pgi">${hdr(T('mts'))}<h3>${esc(on)}</h3>${itb(H1,[['',T('total'),rt(D),pp(O1,SH(D).length),...ZL.map(z=>zc(D,dz,z)),tf(D)]],'tt')}<h4>${T('gk')}</h4>${itb(GH,[gkRow(A,az,sa)],'tt')}<p>${T('na')}: <b>${D.length}</b>, ${T('ef')}: <b>${ef(D.length,O1)}</b></p><h3>${T('ss')} - ${esc(tn)}</h3>${shootTbl(A,az)}<h3>${T('ss')} - ${esc(on)}</h3>${shootTbl(D,dz)}</section>
+ <section class="pgi">${hdr(T('sbp'))}<div class="two"><div><b>${esc(tn)}</b>${court(A,'a')}</div><div><b>${esc(on)}</b>${court(D,'d')}</div></div><h3>${T('sp')}</h3>${prog(A,D,tn,on)}</section>
+ <section class="pgi">${hdr(T('pbp'))}${pt(rows)}</section></div>`}
 function tools(){return`<div class="tools card"><button onclick="exp()">حفظ ملف المباراة</button><button onclick="document.getElementById('f').click()">فتح ملف مباراة</button><button onclick="pr()">تصدير PDF / طباعة</button><button onclick="tab='ihf';render();scrollTo(0,0)">تقرير IHF</button><button style="background:#c62f2f" onclick="reset()">مباراة جديدة</button><input id="f" type="file" accept=".json" class="hide" onchange="imp(this)"></div>`}
 function exp(){const b=new Blob([JSON.stringify(DB)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=(DB.m.team||'match')+'-vs-'+(DB.m.opp||'opp')+'.json';a.click()}
 function imp(el){const r=new FileReader();r.onload=()=>{try{DB=JSON.parse(r.result);save();init();fill();render()}catch(e){alert('ملف غير صالح')}};r.readAsText(el.files[0])}
@@ -253,7 +273,7 @@ function fill(){mt.value=DB.m.team;mo.value=DB.m.opp;md.value=DB.m.date;mc.value
 function render(){document.getElementById('pn').innerHTML=[...new Set(DB.recs.map(r=>r.pname).filter(Boolean))].map(v=>`<option value="${esc(v)}">`).join('');
  document.getElementById('pu').innerHTML=[...new Set(DB.recs.map(r=>r.pnum).filter(Boolean))].map(v=>`<option value="${esc(v)}">`).join('');
  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t==tab));
- document.getElementById('app').innerHTML=tab=='a'||tab=='d'?form(tab):tab=='log'?log()+tools():tab=='ihf'?tools()+ihfReport():tools()+report()+'<h3 class="dash">إحصائيات تفصيلية إضافية (للعرض فقط، لا تُطبع)</h3><div class="dash">'+stats()+'</div>'}
+ document.getElementById('app').innerHTML=tab=='a'||tab=='d'?form(tab):tab=='log'?log()+tools():tab=='ihf'?tools()+ihfBar()+ihfReport():tools()+report()+'<h3 class="dash">إحصائيات تفصيلية إضافية (للعرض فقط، لا تُطبع)</h3><div class="dash">'+stats()+'</div>'}
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render();scrollTo(0,0)});
 init();fill();render();
 </script></body></html>
